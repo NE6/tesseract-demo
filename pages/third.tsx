@@ -53,10 +53,11 @@ export default function Third() {
         ref={webcamRef}
         screenshotFormat="image/png"
         videoConstraints={{
-          facingMode: 'user',
+          facingMode:
+            // 'user',
+            { exact: 'environment' },
           height: 100,
           width: 500,
-          // { exact: 'environment' }
         }}
       />
       <Flex>
