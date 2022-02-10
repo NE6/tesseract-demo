@@ -57,7 +57,7 @@ export default function Third() {
             // 'user',
             { exact: 'environment' },
           height: 100,
-          width: 500,
+          width: 400,
         }}
       />
       <Flex>
