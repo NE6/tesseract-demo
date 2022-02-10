@@ -5,14 +5,13 @@ import { Box, Flex, Button, Image, Text } from '@chakra-ui/react';
 
 export default function Third() {
   const webcamRef = React.useRef(null);
-  const [URI, setURI] = useState('');
-  const [ocr, setOcr] = useState('');
-  // const [toCapture, setToCapture] = useState(false);
-  let context, image;
+  const [URI, setURI] = useState(null);
+  const [ocr, setOcr] = useState('Start Scanning');
 
-  const worker = createWorker({
-    logger: (m) => console.log(m),
-  });
+  const worker = createWorker();
+  // {
+  // logger: (m) => console.log(m),
+  // }
   const doOCR = async (URI) => {
     await worker.load();
     await worker.loadLanguage('eng');
@@ -20,42 +19,23 @@ export default function Third() {
     if (URI) {
       const {
         data: { text },
-      } = await worker.recognize(
-        // 'https://tesseract.projectnaptha.com/img/eng_bw.png'
-        // PNGImage
-        URI
-      );
-      // .then(() => {
-      console.log(URI);
+      } = await worker.recognize(URI);
       console.log(text);
       setOcr(text);
       worker.terminate();
       return { text };
-      // });
     }
   };
   // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     console.log(toCapture);
-  //     if (toCapture) {
-  //       capture();
-  //     }
-  //   }, 2000);
-  //   return () => clearInterval(interval);
+  //   doOCR('');
   // }, []);
 
   const capture = React.useCallback(() => {
-    setURI('');
+    // setURI(null);
     const imageSrc = webcamRef.current.getScreenshot();
     setURI(imageSrc);
-    // console.log(image);
-    doOCR(URI);
+    doOCR(imageSrc);
   }, [webcamRef, setURI, URI]);
-
-  const doubleClick = () => {
-    capture();
-    capture();
-  };
 
   return (
     <Box>
@@ -64,14 +44,14 @@ export default function Third() {
         ref={webcamRef}
         screenshotFormat="image/png"
         videoConstraints={{
-          facingMode: { exact: 'environment' },
+          facingMode: 'user',
+          // { exact: 'environment' }
         }}
       />
       <Flex>
-        <Button onClick={doubleClick}>Capture Image</Button>
+        <Button onClick={capture}>Capture Image</Button>
         <Text fontSize="30px">{ocr}</Text>
       </Flex>
-      {/* <Box>{PNGImage}</Box> */}
       {console.log(ocr)}
     </Box>
   );
