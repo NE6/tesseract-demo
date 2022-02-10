@@ -7,6 +7,7 @@ export default function Third() {
   const webcamRef = React.useRef(null);
   const [URI, setURI] = useState('');
   const [ocr, setOcr] = useState('');
+  // const [toCapture, setToCapture] = useState(false);
   let context, image;
 
   const worker = createWorker({
@@ -16,22 +17,32 @@ export default function Third() {
     await worker.load();
     await worker.loadLanguage('eng');
     await worker.initialize('eng');
-
-    const {
-      data: { text },
-    } = await worker.recognize(
-      // 'https://tesseract.projectnaptha.com/img/eng_bw.png'
-      // PNGImage
-      URI
-    );
-    console.log(URI);
-    setOcr(text);
-    console.log(text);
-    await worker.terminate();
+    if (URI) {
+      const {
+        data: { text },
+      } = await worker.recognize(
+        // 'https://tesseract.projectnaptha.com/img/eng_bw.png'
+        // PNGImage
+        URI
+      );
+      // .then(() => {
+      console.log(URI);
+      console.log(text);
+      setOcr(text);
+      worker.terminate();
+      return { text };
+      // });
+    }
   };
   // useEffect(() => {
-  //   doOCR();
-  // });
+  //   const interval = setInterval(() => {
+  //     console.log(toCapture);
+  //     if (toCapture) {
+  //       capture();
+  //     }
+  //   }, 2000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const capture = React.useCallback(() => {
     setURI('');
@@ -41,11 +52,23 @@ export default function Third() {
     doOCR(URI);
   }, [webcamRef, setURI, URI]);
 
+  const doubleClick = () => {
+    capture();
+    capture();
+  };
+
   return (
     <Box>
-      <Webcam audio={false} ref={webcamRef} screenshotFormat="image/png" />
+      <Webcam
+        audio={false}
+        ref={webcamRef}
+        screenshotFormat="image/png"
+        videoConstraints={{
+          facingMode: 'FACING_MODE_ENVIRONMENT',
+        }}
+      />
       <Flex>
-        <Button onClick={capture}>Capture Image</Button>
+        <Button onClick={doubleClick}>Capture Image</Button>
         <Text fontSize="30px">{ocr}</Text>
       </Flex>
       {/* <Box>{PNGImage}</Box> */}
