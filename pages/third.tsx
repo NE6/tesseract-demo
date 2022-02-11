@@ -56,8 +56,8 @@ export default function Third() {
           facingMode:
             // 'user',
             { exact: 'environment' },
-          height: 100,
-          width: 250,
+          height: 250,
+          width: 80,
         }}
       />
       <Flex>
