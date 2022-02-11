@@ -1,15 +1,14 @@
 import react, { useEffect } from 'react'
 
-import { AlertDescription, Box } from '@chakra-ui/react'
-import Second from './second.tsx'
-import Third from './third.tsx'
+import { Box } from '@chakra-ui/react'
+import Tesseract from './tesseract.tsx'
 
 export default function Home() {
   
   return (
     <Box>
-      {/* <Second /> */}
-      <Third />
+      
+      <Tesseract />
     </Box>
   )
 }

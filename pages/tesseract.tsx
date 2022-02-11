@@ -4,7 +4,7 @@ import Webcam from 'react-webcam';
 import { Box, Flex, Button, Image, Text } from '@chakra-ui/react';
 import { m } from 'framer-motion';
 
-export default function Third() {
+export default function Tesseract() {
   const webcamRef = React.useRef(null);
   const [URI, setURI] = useState(null);
   const [ocr, setOcr] = useState('Start Scanning');
@@ -47,23 +47,32 @@ export default function Third() {
   }, [webcamRef, setURI, URI]);
 
   return (
-    <Box>
+    <Box m="10px">
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/png"
+        // LANDSCAPE SETTINGS
+        // videoConstraints={{
+        //   facingMode: 'user',
+        //   height: 80,
+        //   width: 400,
+        // }}
+
+        // PORTRAIT SETTINGS
         videoConstraints={{
-          facingMode:
-            // 'user',
-            { exact: 'environment' },
-          height: 250,
+          facingMode: { exact: 'environment' },
+          height: 400,
           width: 80,
         }}
       />
-      <Flex>
-        <Button onClick={capture}>Capture Image</Button>
+
+      <Box>
+        <Button mt="200px" onClick={capture}>
+          Capture Image
+        </Button>
         <Text fontSize="30px">{ocr}</Text>
-      </Flex>
+      </Box>
       {/* {console.log(ocr)} */}
     </Box>
   );
