@@ -68,7 +68,7 @@ export default function Tesseract() {
       />
 
       <Box>
-        <Button mt="200px" onClick={capture}>
+        <Button mt="200px" h="150px" w="300px" onClick={capture}>
           Capture Image
         </Button>
         <Text fontSize="30px">{ocr}</Text>
