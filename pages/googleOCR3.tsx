@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Box, Button, Text, Select } from '@chakra-ui/react';
+import { Box, Button, Text, Select, Flex } from '@chakra-ui/react';
 
 type formValues = {
   selectedString: string;
@@ -22,6 +22,7 @@ export default function GoogleOCR3() {
   const [ocr, setOcr] = useState('Start Scanning');
   const [text, setText] = useState([]);
   const [string, setString] = useState('');
+  const [showResult, setShowResult] = useState(false);
 
   const {
     register,
@@ -52,6 +53,7 @@ export default function GoogleOCR3() {
     if (data) {
       // setString(data.selectedString);
       console.log(data);
+      setShowResult(true);
     }
   };
 
@@ -71,9 +73,17 @@ export default function GoogleOCR3() {
       />
 
       <Box>
-        <Button h="150px" w="300px" onClick={capture}>
-          Capture Image
-        </Button>
+        <Flex>
+          <Button h="150px" w="300px" onClick={capture}>
+            Capture Image
+          </Button>
+          {showResult ? (
+            <Box ml="30px">
+              <Text>Your Selection: </Text>
+              <Text>{string}</Text>
+            </Box>
+          ) : null}
+        </Flex>
         {/* <Text fontSize="30px">{text}</Text> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           {text[0] ? (
