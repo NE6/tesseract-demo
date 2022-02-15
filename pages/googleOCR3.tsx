@@ -68,7 +68,7 @@ export default function GoogleOCR3() {
         ref={webcamRef}
         screenshotFormat="image/png"
         videoConstraints={{
-          facingMode: 'user',
+          facingMode: 'environment',
         }}
       />
 
