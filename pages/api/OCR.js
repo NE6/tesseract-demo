@@ -1,7 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 const vision = require('@google-cloud/vision');
-const client = new vision.ImageAnnotatorClient();
+const client = new vision.ImageAnnotatorClient(
+  // {  keyFilename: 'AIzaSyAMwfTTvXqWoLDFDntE-q4Emnb9zhsLiYA' }
+);
 const fs = require("fs");
 const path = require("path");
 
@@ -13,13 +15,14 @@ export default async function googleOCR(req, res) {
   try {
     const [result] = await client.textDetection(Buffer.from(data, "base64"));
     const detections = result.textAnnotations;
-    // console.log(result.textAnnotations);
-    // detections.forEach(text => console.log(text))
     console.log(result.fullTextAnnotation.text);
+    // detections.forEach(text => console.log(text))
+    const textResult = result.fullTextAnnotation.text
+    return res.status(200).json({result: textResult})
   } catch (error) {
     console.error(error);
+    return res.status(500);
   }
-  res.status(200).json('')
 }
 
 // export default function handler(req, res) {

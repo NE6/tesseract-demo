@@ -4,39 +4,59 @@ import axios from 'axios';
 import Webcam from 'react-webcam';
 import vision from '@google-cloud/vision';
 import FormData from 'form-data';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Text, Select } from '@chakra-ui/react';
 
-const fetcher = (url, image) => fetch(url).then((res) => res.json());
+type formValues = {
+  selectedString: string;
+};
+const schema: yup.SchemaOf<formValues> = yup.object().shape({
+  selectedString: yup.string(),
+});
 
 export default function GoogleOCR3() {
   const webcamRef = React.useRef(null);
   const [ocr, setOcr] = useState('Start Scanning');
-  const [text, setText] = useState('');
-  const [image, setImage] = useState('');
+  const [text, setText] = useState([]);
+  const [string, setString] = useState('');
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<formValues>({
+    resolver: yupResolver(schema),
+  });
 
   async function getText(image) {
     const response = await axios.post(`http://localhost:3000/api/OCR`, {
       data: image,
     });
 
-    // setText(response.data);
-
-    return { data: response.data };
+    const stringArr = response.data.result.split('\n');
+    setText(stringArr);
+    console.log(stringArr);
   }
 
   console.log(text);
   const capture = React.useCallback(() => {
-    // setURI(null);
     setOcr('Processing...');
     const imageSrc = webcamRef.current.getScreenshot();
-    // setURI(imageSrc);
-    // setImage(imageSrc);
     getText(imageSrc);
-  }, [
-    webcamRef,
-    // setURI, URI
-  ]);
+  }, [webcamRef]);
+
+  const onSubmit = (data: formValues) => {
+    if (data) {
+      setString(data.selectedString);
+    }
+  };
+
+  useEffect(() => {
+    console.log(string);
+  }, [string]);
 
   return (
     <Box m="10px">
@@ -53,9 +73,24 @@ export default function GoogleOCR3() {
         <Button h="150px" w="300px" onClick={capture}>
           Capture Image
         </Button>
-        <Text fontSize="30px">{text}</Text>
+        {/* <Text fontSize="30px">{text}</Text> */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {text[0] ? (
+            <Box>
+              <Text>Select code</Text>
+              <Select {...register('selectedString')} name="selectedString">
+                {text.map((string) => (
+                  <option key={string} value={string}>
+                    {string}
+                  </option>
+                ))}
+              </Select>
+              {}
+            </Box>
+          ) : null}
+          <Button type="submit">Validate</Button>
+        </form>
       </Box>
-      {console.log('xxxxxxxx', text)}
     </Box>
   );
 }
