@@ -50,7 +50,8 @@ export default function GoogleOCR3() {
 
   const onSubmit = (data: formValues) => {
     if (data) {
-      setString(data.selectedString);
+      // setString(data.selectedString);
+      console.log(data);
     }
   };
 
@@ -78,7 +79,11 @@ export default function GoogleOCR3() {
           {text[0] ? (
             <Box>
               <Text>Select code</Text>
-              <Select {...register('selectedString')} name="selectedString">
+              <Select
+                {...register('selectedString')}
+                name="selectedString"
+                onChange={(e) => setString(e.target.value)}
+              >
                 {text.map((string) => (
                   <option key={string} value={string}>
                     {string}
@@ -88,7 +93,9 @@ export default function GoogleOCR3() {
               {}
             </Box>
           ) : null}
-          <Button type="submit">Validate</Button>
+          <Button type="submit" disabled={!string}>
+            Validate
+          </Button>
         </form>
       </Box>
     </Box>
