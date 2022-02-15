@@ -44,7 +44,8 @@ export default function GoogleOCR3() {
 
   console.log(text);
   const capture = React.useCallback(() => {
-    setOcr('Processing...');
+    // setOcr('Processing...');
+    setShowResult(false);
     const imageSrc = webcamRef.current.getScreenshot();
     getText(imageSrc);
   }, [webcamRef]);
